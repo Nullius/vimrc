@@ -1,4 +1,4 @@
-call plug#begin('~/AppData/Local/nvim/plugged')
+call plug#begin()
 
 Plug 'joshdick/onedark.vim'
 Plug 'iCyMind/NeoSolarized'
