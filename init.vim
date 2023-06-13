@@ -30,10 +30,8 @@ Plug 'MaxMEllon/vim-jsx-pretty'
 Plug 'peitalin/vim-jsx-typescript'
 
 " Search
-" Plug 'mileszs/ack.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'kien/ctrlp.vim'
 
 " Testing
 Plug 'vim-test/vim-test'
@@ -41,9 +39,6 @@ Plug 'vim-test/vim-test'
 call plug#end()
 
 let $PATH = "C:\\Program Files\\Git\\usr\\bin;" .$PATH
-
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlP'
 
 nnoremap <silent><RightMouse> :call GuiShowContextMenu()<CR>
 inoremap <silent><RightMouse> <Esc>:call GuiShowContextMenu()<CR>
@@ -54,6 +49,11 @@ vmap <C-c> "+yi
 vmap <C-x> "+c
 vmap <C-v> c<ESC>"+p
 imap <C-v> <ESC>"+pa
+
+" switch to normal mode
+if has('nvim')
+  tmap <C-o> <C-\><C-n>
+endif
 
 set nu
 set relativenumber
@@ -83,6 +83,11 @@ nnoremap <silent> K :call <SID>show_documentation()<CR>
 " NerdTree maps
 nmap <silent> <F5> :NERDTreeFind<CR>
 
+" Fugitive Conflict Resolution
+nnoremap <leader>gd :Gdiffsplit!<CR>
+nnoremap gdh :diffget //2<CR>
+nnoremap gdl :diffget //3<CR>
+
 function! s:show_documentation()
   if CocAction('hasProvider', 'hover')
     call CocActionAsync('doHover')
@@ -96,18 +101,20 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Autocomplete
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? coc#_select_confirm() :
-      \ coc#expandableOrJumpable() ?
-      \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ CheckBackspace() ? "\<Tab>" :
       \ coc#refresh()
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-    function! s:check_back_space() abort
-      let col = col('.') - 1
-      return !col || getline('.')[col - 1]  =~# '\s'
-    endfunction
+" Make <CR> to accept selected completion item or notify coc.nvim to format
+" <C-g>u breaks current undo, please make your own choice
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
-    let g:coc_snippet_next = '<tab>'
+function! CheckBackspace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
 
 " Jest on windows
 function! JestTransform(cmd) abort
