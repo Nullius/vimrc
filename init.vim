@@ -66,6 +66,7 @@ set tabstop=2
 set shiftwidth=2
 
 set clipboard^=unnamed,unnamedplus
+:tnoremap <expr> <C-R> '<C-\><C-N>"'.nr2char(getchar()).'pi'
 
 " Remap keys for gotos
 nmap <silent> gd <Plug>(coc-definition)
