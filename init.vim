@@ -3,9 +3,9 @@ call plug#begin()
 Plug 'joshdick/onedark.vim'
 Plug 'iCyMind/NeoSolarized'
 
-Plug 'preservim/nerdtree'
+Plug 'preservim/nerdtree' " Change to ?
 
-Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline' " Do I need this?
 Plug 'vim-airline/vim-airline-themes'
 
 Plug 'tpope/vim-fugitive'
